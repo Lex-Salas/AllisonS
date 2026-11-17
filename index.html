@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allison & Axel - Nuestra Boda</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: #fdf6f0;
+    color: #4a3b3b;
+    overflow-x: hidden;
+  }
+  h1, h2 { font-family: 'Great Vibes', cursive; font-weight: 400; color: #b5675a; }
+  section { min-height: 100vh; padding: 60px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+  /* SOBRE */
+  #sobre {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(160deg, #f6e1d8, #e9b9a8);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: transform 1s ease, opacity 1s ease;
+    cursor: pointer;
+  }
+  #sobre.abierto { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+  .sobre-icono { font-size: 90px; animation: latir 1.6s infinite; }
+  #sobre p { margin-top: 20px; font-size: 22px; letter-spacing: 2px; color: #7a3f35; }
+  @keyframes latir { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+  /* PORTADA */
+  #portada { background: linear-gradient(180deg, #fdf6f0, #f6e1d8); position: relative; overflow: hidden; }
+  #portada h1 { font-size: clamp(56px, 14vw, 110px); line-height: 1.1; }
+  #portada .amp { font-size: 48px; color: #d9a79b; }
+  #portada p { font-size: 22px; letter-spacing: 3px; margin-top: 18px; text-transform: uppercase; }
+  .petalo { position: absolute; top: -40px; font-size: 22px; animation: caer linear infinite; opacity: .8; }
+  @keyframes caer { to { transform: translateY(110vh) rotate(360deg); } }
+
+  /* CUENTA REGRESIVA */
+  #cuenta { background: #fff; }
+  #cuenta h2, #historia h2, #lugar h2, #juego h2, #rsvp h2 { font-size: 56px; margin-bottom: 24px; }
+  .contador { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .caja { background: #fdf6f0; border: 1px solid #e9b9a8; border-radius: 14px; padding: 18px 14px; min-width: 78px; }
+  .caja span { display: block; font-size: 44px; font-weight: 600; color: #b5675a; }
+  .caja small { text-transform: uppercase; letter-spacing: 2px; font-size: 13px; }
+
+  /* HISTORIA */
+  #historia { background: #fdf6f0; }
+  .linea { max-width: 520px; text-align: left; border-left: 2px solid #e9b9a8; padding-left: 22px; }
+  .hito { margin-bottom: 28px; opacity: 0; transform: translateY(30px); transition: all .8s ease; }
+  .hito.visible { opacity: 1; transform: none; }
+  .hito b { color: #b5675a; font-size: 20px; }
+  .hito p { font-size: 20px; }
+
+  /* LUGAR */
+  #lugar { background: #fff; }
+  #lugar p { font-size: 22px; margin-bottom: 18px; }
+  .mapa { width: 100%; max-width: 560px; height: 280px; border: 0; border-radius: 16px; }
+  .boton {
+    display: inline-block; margin-top: 18px; padding: 14px 30px; border: none;
+    background: #b5675a; color: #fff; font-family: inherit; font-size: 20px;
+    border-radius: 30px; cursor: pointer; text-decoration: none; transition: transform .2s, background .2s;
+  }
+  .boton:hover { transform: scale(1.05); background: #9c5448; }
+
+  /* JUEGO */
+  #juego { background: #f6e1d8; }
+  .tablero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 360px; width: 100%; margin-top: 10px; }
+  .carta { aspect-ratio: 1; perspective: 600px; cursor: pointer; }
+  .carta-interna { position: relative; width: 100%; height: 100%; transition: transform .5s; transform-style: preserve-3d; }
+  .carta.volteada .carta-interna { transform: rotateY(180deg); }
+  .cara { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 36px; }
+  .frente { background: #b5675a; color: #fff; font-size: 28px; }
+  .dorso { background: #fff; transform: rotateY(180deg); border: 2px solid #e9b9a8; }
+  .carta.lista .dorso { background: #fdf0ea; border-color: #b5675a; }
+  #mensaje-juego { margin-top: 18px; font-size: 22px; min-height: 30px; color: #7a3f35; }
+
+  /* RSVP */
+  #rsvp { background: #fff; }
+  form { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 420px; }
+  input, select, textarea {
+    padding: 14px; border: 1px solid #e9b9a8; border-radius: 12px;
+    font-family: inherit; font-size: 18px; background: #fdf6f0;
+  }
+  #gracias { display: none; font-size: 26px; color: #b5675a; }
+
+  /* BOTON MUSICA */
+  #musica-btn {
+    position: fixed; bottom: 18px; right: 18px; z-index: 200;
+    width: 52px; height: 52px; border-radius: 50%; border: none;
+    background: #b5675a; color: #fff; font-size: 22px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  }
+</style>
+</head>
+<body>
+
+<!-- SOBRE DE ENTRADA -->
+<div id="sobre" onclick="abrirInvitacion()">
+  <div class="sobre-icono">💌</div>
+  <p>TOCA PARA ABRIR</p>
+</div>
+
+<button id="musica-btn" onclick="alternarMusica()" title="Música">🔊</button>
+
+<!-- PORTADA -->
+<section id="portada">
+  <p>¡Nos casamos!</p>
+  <h1>Valeria <span class="amp">&</span> Andrés</h1>
+  <p>20 de enero · Palmar Norte</p>
+</section>
+
+<!-- CUENTA REGRESIVA -->
+<section id="cuenta">
+  <h2>Faltan solo...</h2>
+  <div class="contador">
+    <div class="caja"><span id="dias">0</span><small>Días</small></div>
+    <div class="caja"><span id="horas">0</span><small>Horas</small></div>
+    <div class="caja"><span id="minutos">0</span><small>Min</small></div>
+    <div class="caja"><span id="segundos">0</span><small>Seg</small></div>
+  </div>
+</section>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <h2>Nuestra historia</h2>
+  <div class="linea">
+    <div class="hito"><b>2019</b><p>Nos conocimos en una fiesta de amigos.</p></div>
+    <div class="hito"><b>2021</b><p>Nuestro primer viaje juntos.</p></div>
+    <div class="hito"><b>2025</b><p>Él pidió matrimonio al atardecer.</p></div>
+    <div class="hito"><b>Enero</b><p>¡Y ahora queremos celebrarlo contigo!</p></div>
+  </div>
+</section>
+
+<!-- LUGAR -->
+<section id="lugar">
+  <h2>El lugar</h2>
+  <p>Ceremonia y recepción<br><b>Salón de eventos, Palmar Norte, Osa</b><br>Hora: 4:00 p.m.</p>
+  <iframe class="mapa" loading="lazy"
+    src="https://www.google.com/maps?q=Palmar+Norte,+Costa+Rica&output=embed"></iframe>
+  <a class="boton" target="_blank"
+     href="https://www.google.com/maps/search/?api=1&query=Palmar+Norte+Costa+Rica">Cómo llegar</a>
+</section>
+
+<!-- JUEGO DE MEMORIA -->
+<section id="juego">
+  <h2>Juega con nosotros</h2>
+  <p style="margin-bottom:14px;font-size:20px">Encuentra todas las parejas</p>
+  <div class="tablero" id="tablero"></div>
+  <div id="mensaje-juego"></div>
+  <button class="boton" onclick="iniciarJuego()">Reiniciar</button>
+</section>
+
+<!-- CONFIRMAR ASISTENCIA -->
+<section id="rsvp">
+  <h2>Confirma tu asistencia</h2>
+  <form id="form-rsvp" onsubmit="enviarRSVP(event)">
+    <input type="text" id="nombre" placeholder="Tu nombre completo" required>
+    <select id="asistencia">
+      <option value="si">¡Claro que sí, ahí estaré!</option>
+      <option value="no">Lamentablemente no podré</option>
+    </select>
+    <input type="number" id="acompanantes" min="0" max="5" placeholder="Número de acompañantes">
+    <textarea id="comida" rows="2" placeholder="Restricciones de comida (opcional)"></textarea>
+    <textarea id="mensaje" rows="3" placeholder="Un mensaje para los novios"></textarea>
+    <button class="boton" type="submit">Enviar confirmación</button>
+  </form>
+  <p id="gracias">💖 ¡Gracias por confirmar! Nos vemos en la boda.</p>
+</section>
+
+<!-- Musica de fondo: reemplaza la URL por la cancion elegida (archivo mp3 propio) -->
+<audio id="audio" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // ===== FECHA DE LA BODA (ficticia): 20 de enero =====
+  const hoy = new Date();
+  let anio = hoy.getFullYear();
+  let fechaBoda = new Date(anio, 0, 20, 16, 0, 0);
+  if (fechaBoda < hoy) fechaBoda = new Date(anio + 1, 0, 20, 16, 0, 0);
+
+  function actualizarCuenta() {
+    const dif = fechaBoda - new Date();
+    if (dif <= 0) return;
+    document.getElementById('dias').textContent = Math.floor(dif / 86400000);
+    document.getElementById('horas').textContent = Math.floor(dif / 3600000) % 24;
+    document.getElementById('minutos').textContent = Math.floor(dif / 60000) % 60;
+    document.getElementById('segundos').textContent = Math.floor(dif / 1000) % 60;
+  }
+  setInterval(actualizarCuenta, 1000);
+  actualizarCuenta();
+
+  // ===== SOBRE Y MUSICA =====
+  const audio = document.getElementById('audio');
+  function abrirInvitacion() {
+    document.getElementById('sobre').classList.add('abierto');
+    audio.play().catch(() => {});
+  }
+  function alternarMusica() {
+    const btn = document.getElementById('musica-btn');
+    if (audio.paused) { audio.play(); btn.textContent = '🔊'; }
+    else { audio.pause(); btn.textContent = '🔇'; }
+  }
+
+  // ===== PETALOS CAYENDO =====
+  const portada = document.getElementById('portada');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petalo';
+    p.textContent = '🌸';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    portada.appendChild(p);
+  }
+
+  // ===== HISTORIA: APARECE AL DESLIZAR =====
+  const observador = new IntersectionObserver(entradas => {
+    entradas.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.hito').forEach(h => observador.observe(h));
+
+  // ===== JUEGO DE MEMORIA =====
+  const simbolos = ['💍', '🥂', '🎂', '💐', '👰', '🤵'];
+  let primera = null, bloqueo = false, aciertos = 0;
+
+  function iniciarJuego() {
+    const tablero = document.getElementById('tablero');
+    tablero.innerHTML = '';
+    document.getElementById('mensaje-juego').textContent = '';
+    aciertos = 0; primera = null; bloqueo = false;
+    const mazo = [...simbolos, ...simbolos].sort(() => Math.random() - 0.5);
+    mazo.forEach(s => {
+      const c = document.createElement('div');
+      c.className = 'carta';
+      c.dataset.simbolo = s;
+      c.innerHTML = '<div class="carta-interna"><div class="cara frente">♥</div><div class="cara dorso">' + s + '</div></div>';
+      c.onclick = () => voltear(c);
+      tablero.appendChild(c);
+    });
+  }
+
+  function voltear(c) {
+    if (bloqueo || c.classList.contains('volteada')) return;
+    c.classList.add('volteada');
+    if (!primera) { primera = c; return; }
+    if (primera.dataset.simbolo === c.dataset.simbolo) {
+      primera.classList.add('lista'); c.classList.add('lista');
+      primera = null; aciertos++;
+      if (aciertos === simbolos.length) {
+        document.getElementById('mensaje-juego').textContent = '¡Lo lograste! Ya eres parte de la familia 💖';
+      }
+    } else {
+      bloqueo = true;
+      const a = primera; primera = null;
+      setTimeout(() => { a.classList.remove('volteada'); c.classList.remove('volteada'); bloqueo = false; }, 800);
+    }
+  }
+  iniciarJuego();
+
+  // ===== CONFIRMACION (en la version real se guarda en Firebase) =====
+  function enviarRSVP(e) {
+    e.preventDefault();
+    const datos = {
+      nombre: document.getElementById('nombre').value,
+      asistencia: document.getElementById('asistencia').value,
+      acompanantes: document.getElementById('acompanantes').value || 0,
+      comida: document.getElementById('comida').value,
+      mensaje: document.getElementById('mensaje').value
+    };
+    console.log('Confirmación recibida:', datos);
+    document.getElementById('form-rsvp').style.display = 'none';
+    document.getElementById('gracias').style.display = 'block';
+  }
+</script>
+</body>
+</html>
